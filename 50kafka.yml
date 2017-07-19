@@ -43,6 +43,7 @@ spec:
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
+          --override broker.rack=$(echo TODO-how-do-we-get-the-zone-name-here)
         resources:
           requests:
             cpu: 100m
