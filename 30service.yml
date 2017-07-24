@@ -1,11 +1,50 @@
+# SEE https://github.com/kubernetes/kubernetes/issues/44103
+# (this requires manual labelling for now)
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka
+  name: kafka-0
   namespace: kafka
 spec:
   ports:
-  - port: 9092
+  - name: kafka-0
+    port: 9093
+    nodePort: 30093
   selector:
     app: kafka
+    name: kafka-0
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-1
+  namespace: kafka
+spec:
+  ports:
+  - name: kafka-1
+    port: 9093
+    nodePort: 30094
+  selector:
+    app: kafka
+    name: kafka-1
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-2
+  namespace: kafka
+spec:
+  ports:
+  - name: kafka-2
+    port: 9093
+    nodePort: 30095
+  selector:
+    app: kafka
+    name: kafka-2
+  type: NodePort
+

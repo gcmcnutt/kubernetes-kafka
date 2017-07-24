@@ -1,7 +1,7 @@
 
 FROM openjdk:8u102-jre
 
-ENV kafka_version=0.10.1.1
+ENV kafka_version=0.10.2.0
 ENV scala_version=2.11.8
 ENV kafka_bin_version=2.11-$kafka_version
 
@@ -12,8 +12,7 @@ RUN curl -SLs "http://www.scala-lang.org/files/archive/scala-$scala_version.deb"
 	&& mv /opt/kafka_$kafka_bin_version /opt/kafka
 
 WORKDIR /opt/kafka
-ENTRYPOINT ["bin/kafka-server-start.sh"]
+ENTRYPOINT bin/start.sh
 
-ADD config/server.properties config/
-
-CMD ["config/server.properties"]
+COPY etc/log4j.properties config/
+COPY bin/start.sh bin/start.sh

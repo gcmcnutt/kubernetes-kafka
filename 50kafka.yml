@@ -14,13 +14,20 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: broker
-        image: solsson/kafka-persistent:0.10.1@sha256:0719b4688b666490abf4b32a3cc5c5da7bb2d6276b47377b35de5429f783e9c2
+        image: pstg-kafka:0.10.2.0-1
         ports:
         - containerPort: 9092
-        command:
-        - sh
-        - -c
-        - "./bin/kafka-server-start.sh config/server.properties --override broker.id=$(hostname | awk -F'-' '{print $2}')"
+        - containerPort: 9093
+        #command: [ "sh", "-c", "tail -f /dev/null" ]
+        env:
+        - name: ZOOKEEPER
+          value: "zookeeper:2181"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: "INTERNAL_PLAINTEXT:PLAINTEXT,EXTERNAL_PLAINTEXT:PLAINTEXT"
+        - name: KAFKA_LISTENERS
+          value: "INTERNAL_PLAINTEXT://0.0.0.0:9092,EXTERNAL_PLAINTEXT://0.0.0.0:9093"
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: "INTERNAL_PLAINTEXT"
         volumeMounts:
         - name: datadir
           mountPath: /opt/kafka/data
@@ -31,4 +38,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 200Gi
+          storage: 20Gi
