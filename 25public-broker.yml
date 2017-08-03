@@ -3,11 +3,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: broker
+  name: public-broker
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: '0.0.0.0/0'
 spec:
   ports:
-  - port: 9092
+  - port: 9093
   # [podname].broker.kafka.svc.cluster.local
-  clusterIP: None
+  type: LoadBalancer
   selector:
     app: kafka

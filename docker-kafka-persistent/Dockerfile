@@ -5,6 +5,8 @@ ENV kafka_version=0.10.2.0
 ENV scala_version=2.11.8
 ENV kafka_bin_version=2.11-$kafka_version
 
+RUN apt update && apt-get install -y dnsutils
+
 RUN curl -SLs "http://www.scala-lang.org/files/archive/scala-$scala_version.deb" -o scala.deb \
 	&& dpkg -i scala.deb \
 	&& rm scala.deb \

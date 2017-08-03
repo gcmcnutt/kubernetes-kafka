@@ -4,7 +4,8 @@ set -e
 # TODO this couples too tightly to kubernetes naming convention -- move this up a level...
 ID=$(hostname | awk -F'-' '{print $2}')
 EXT_PORT=`expr 30093 + $ID`
-export KAFKA_ADVERTISED_LISTENERS=INTERNAL_PLAINTEXT://$(hostname).broker:9092,EXTERNAL_PLAINTEXT://192.168.64.2:$EXT_PORT
+NODEIP=$(dig $MY_NODE_NAME +short)
+export KAFKA_ADVERTISED_LISTENERS=INTERNAL_PLAINTEXT://$(hostname).broker:9092,EXTERNAL_PLAINTEXT://$NODEIP:$EXT_PORT
 
 if [ -z "$ID" ]; then
     ID=0

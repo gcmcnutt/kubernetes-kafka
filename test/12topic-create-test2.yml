@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: topic-create-test2
-  namespace: kafka
 spec:
   template:
     metadata:

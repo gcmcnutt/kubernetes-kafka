@@ -29,7 +29,7 @@ minikube dashboard
 # ensure in the minikube context
 eval $(minikube docker-env)
 cd docker-kafka-persistent
-docker install -t pstg-kafka:0.10.2.0-1 .
+docker build -t pstg-kafka:0.10.2.0-1 .
 ```
 
 # Kafka as Kubernetes StatefulSet
@@ -69,6 +69,12 @@ but with a [startup script change to guess node id from hostname](https://github
 Zookeeper runs as a [Deployment](http://kubernetes.io/docs/user-guide/deployments/) without persistent storage:
 ```
 kubectl create -f ./zookeeper/
+```
+
+You can verify that zoo is running by connecting to one of its 5 instances 
+```
+kubectl exec -it zoo-3 bash
+# then at the prompt -> bin/zkCli.sh
 ```
 
 If you lose your zookeeper cluster, kafka will be unaware that persisted topics exist.

@@ -2,7 +2,6 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: kafka
-  namespace: kafka
 spec:
   serviceName: "broker"
   replicas: 3
@@ -14,12 +13,16 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: broker
-        image: pstg-kafka:0.10.2.0-1
+        image: 621123821552.dkr.ecr.us-west-2.amazonaws.com/pstg-kafka:0.10.2.0-7
         ports:
         - containerPort: 9092
         - containerPort: 9093
         #command: [ "sh", "-c", "tail -f /dev/null" ]
         env:
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         - name: ZOOKEEPER
           value: "zookeeper:2181"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
@@ -34,8 +37,10 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: datadir
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: default
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 20Gi
+          storage: 10Gi

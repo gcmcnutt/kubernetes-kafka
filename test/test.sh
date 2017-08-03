@@ -10,7 +10,7 @@ kubectl exec -ti testclient -- ./bin/kafka-console-consumer.sh --zookeeper zooke
 
 # Go ahead and produce messages
 echo "Write a message followed by enter, exit using Ctrl+C"
-kubectl exec -ti testclient -- ./bin/kafka-console-producer.sh --broker-list kafka-0.broker.kafka.svc.cluster.local:9092 --topic test1
+kubectl exec -ti testclient -- ./bin/kafka-console-producer.sh --broker-list kafka-0.broker.default.svc.cluster.local:9092 --topic test1
 
 # Bootstrap even if two nodes are down (shorter name requires same namespace)
 kubectl exec -ti testclient -- ./bin/kafka-console-producer.sh --broker-list kafka-0.broker:9092,kafka-1.broker:9092,kafka-2.broker:9092 --topic test1
