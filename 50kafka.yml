@@ -13,7 +13,10 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: broker
-        image: 621123821552.dkr.ecr.us-west-2.amazonaws.com/pstg-kafka:0.10.2.0-7
+        image: 621123821552.dkr.ecr.us-west-2.amazonaws.com/pstg-kafka:0.10.2.0-8
+        resources:
+          limits:
+            memory: 3Gi
         ports:
         - containerPort: 9092
         - containerPort: 9093
@@ -31,6 +34,20 @@ spec:
           value: "INTERNAL_PLAINTEXT://0.0.0.0:9092,EXTERNAL_PLAINTEXT://0.0.0.0:9093"
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: "INTERNAL_PLAINTEXT"
+        # We'll need some reasonable upper limit here for all uses.  Freq diags is a couple of MB these days.
+        # https://issues.apache.org/jira/browse/KAFKA-4169
+        - name: KAFKA_REPLICA_FETCH_MAX_BYTES
+          value: "5000000"
+        - name: KAFKA_MESSAGE_MAX_BYTES
+          value: "5000000"
+        - name: KAFKA_GROUP_MAX_SESSION_TIMEOUT_MS
+          value: "3600000"
+        - name: KAFKA_LOG_DIRS
+          value: /opt/kafka/data/logs
+        - name: KAFKA_LOG_RETENTION_BYTES
+          value: "450000000000"
+        - name: KAFKA_HEAP_OPTS
+          value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+PrintFlagsFinal"
         volumeMounts:
         - name: datadir
           mountPath: /opt/kafka/data
@@ -43,4 +60,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 10Gi
+          storage: 500Gi
